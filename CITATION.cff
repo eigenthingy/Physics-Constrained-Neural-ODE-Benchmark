@@ -1,0 +1,28 @@
+cff-version: 1.2.0
+title: "NOT PINNs: a controlled comparison of soft and hard physics constraints in neural dynamics models"
+message: "If you use this benchmark or its findings, please cite it."
+type: software
+authors:
+  - given-names: Sarra
+    alias: eigenthingy
+abstract: >-
+  A controlled study of four ways to impose a conservation law on a neural
+  vector-field model: no constraint, a soft loss penalty on the energy
+  residual, a Hamiltonian architecture that exactly conserves a learned
+  invariant, and a projection architecture that exactly conserves the known
+  physical energy. All four are trained on identical noisy data with matched
+  parameter counts and identical optimizer budgets, and scored on accuracy,
+  long-horizon stability, extrapolation to unseen energy shells, observation
+  noise, data efficiency, and model misspecification. 560 runs over three
+  systems (nonlinear pendulum, Henon-Heiles, damped pendulum) with five seeds
+  and bootstrap confidence intervals.
+keywords:
+  - physics-informed neural networks
+  - Hamiltonian neural networks
+  - scientific machine learning
+  - conservation laws
+  - benchmark
+  - neural ODE
+license: MIT
+version: 1.0.0
+date-released: 2026-08-14

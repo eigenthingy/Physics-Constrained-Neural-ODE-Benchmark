@@ -1,0 +1,24 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ipynb_checkpoints/
+.venv/
+venv/
+*.egg-info/
+build/
+dist/
+
+# Regenerable in ~5 minutes from the committed raw results, and large.
+results/models/
+results/logs/
+results_ci/
+
+# Raw session log (local paths, 1.2 MB) and the script that renders it.
+# transcript/SESSION.md is the published, scrubbed version.
+transcript/session-raw.jsonl
+scripts/export_transcript.py
+
+# Deliberately NOT ignored, because they are the paper:
+#   results/raw_shard*.jsonl   every per-run record (2.6 MB)
+#   results/table_*.csv        the aggregated tables
+#   figures/*.png              the figures the README points at

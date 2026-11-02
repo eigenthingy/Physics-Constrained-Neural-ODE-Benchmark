@@ -1,0 +1,66 @@
+name: tests
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    # The repository's central claim is that the conservation guarantees are
+    # executable, not rhetorical. This job is what makes that checkable by
+    # someone who has not cloned anything.
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Install (CPU-only torch)
+        run: |
+          python -m pip install --upgrade pip
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -e ".[dev]"
+
+      - name: Test suite
+        run: pytest -q
+
+      - name: Palette gates
+        run: |
+          python scripts/validate_palette.py "#2a78d6,#eb6834,#1baf7a,#4a3aa7" --mode light
+
+      - name: Experiment grid is well-formed
+        run: python scripts/run_experiments.py --list
+
+  smoke:
+    # Cheapest possible end-to-end proof that the pipeline still runs: a reduced
+    # grid plus every figure, from scratch, on a clean machine.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install (CPU-only torch)
+        run: |
+          python -m pip install --upgrade pip
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -e ".[dev]"
+      - name: Reduced grid + tables
+        run: |
+          python scripts/run_experiments.py --quick --out results_ci
+          python -c "from pcnn.analysis import build_tables; build_tables('results_ci','results_ci')"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ci-quick-results
+          path: results_ci/table_*.csv
